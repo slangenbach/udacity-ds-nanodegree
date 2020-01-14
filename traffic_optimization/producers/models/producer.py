@@ -30,7 +30,7 @@ class Producer:
         self.num_partitions = num_partitions
         self.num_replicas = num_replicas
         self.broker_properties = {
-            'bootstrap.servers': 'PLAINTEXT://kafka0:9092,PLAINTEXT://kafka1:9093,PLAINTEXT://kafka2:9094',
+            'bootstrap.servers': 'PLAINTEXT://0.0.0.0:9092,PLAINTEXT://0.0.0.0:9093,PLAINTEXT://0.0.0.0:9094',
             'schema.registry.url': 'http://0.0.0.0:8081'
         }
 
@@ -49,15 +49,31 @@ class Producer:
 
         logger.debug("Kafka topic creation complete")
         client = AdminClient({'bootstrap.servers': self.broker_properties.get('bootstrap.servers')})
-        client.create_topics([NewTopic(topic=self.topic_name,
-                                       num_partitions=self.num_partitions,
-                                       replication_factor=self.num_replicas)])
+
+        if self.topic_name not in client.list_topics().topics:
+            futures = client.create_topics([NewTopic(topic=self.topic_name,
+                                                     num_partitions=self.num_partitions,
+                                                     replication_factor=self.num_replicas)])
+
+            for topic, future in futures.items():
+                try:
+                    future.result()
+                    logger.info(f"Topic {topic} created")
+                except Exception as e:
+                    logger.fatal(f"Failed to create topic {topic}: {e}")
+        else:
+            logger.info(f"Topic {self.topic_name} already exists")
+
 
     def close(self):
         """Prepares the producer for exit by cleaning up the producer"""
         logger.debug("Kafka producer close complete")
-        client = AdminClient({'bootstrap.servers': self.broker_properties.get('bootstrap.servers')})
-        client.delete_topics([self.topic_name])
+        #client = AdminClient({'bootstrap.servers': self.broker_properties.get('bootstrap.servers')})
+        #client.delete_topics([self.topic_name])
+
+        if self.producer is not None:
+            logger.debug("Flushing producer")
+            self.producer.flush()
 
     def time_millis(self):
         """Use this function to get the key for Kafka Events"""
