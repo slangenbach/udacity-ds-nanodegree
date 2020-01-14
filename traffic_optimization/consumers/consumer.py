@@ -1,12 +1,8 @@
 """Defines core consumer functionality"""
 import logging
-from configparser import ConfigParser
-from pathlib import Path
 
-import confluent_kafka
 from confluent_kafka import Consumer, OFFSET_BEGINNING
 from confluent_kafka.avro import AvroConsumer
-from confluent_kafka.avro.serializer import SerializerError
 from tornado import gen
 
 logger = logging.getLogger(__name__)

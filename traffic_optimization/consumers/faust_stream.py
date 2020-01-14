@@ -1,8 +1,6 @@
 """Defines trends calculations for stations"""
 import logging
 from dataclasses import dataclass
-from configparser import ConfigParser
-from pathlib import Path
 
 import faust
 
