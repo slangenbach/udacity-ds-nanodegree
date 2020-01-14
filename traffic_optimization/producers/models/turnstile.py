@@ -27,7 +27,7 @@ class Turnstile(Producer):
         )
 
         super().__init__(
-            topic_name=f"com.udacity.projects.transport.turnstiles.{station_name}",
+            topic_name="com.udacity.projects.transport.turnstiles",
             key_schema=Turnstile.key_schema,
             value_schema=Turnstile.value_schema)
 
@@ -37,7 +37,7 @@ class Turnstile(Producer):
     def run(self, timestamp, time_step):
         """Simulates riders entering through the turnstile."""
 
-        logger.debug("Kafka turnstile integration complete")
+        logger.debug("turnstile run function working")
         num_entries = self.turnstile_hardware.get_entries(timestamp, time_step)
 
         self.producer.produce(
