@@ -2,7 +2,6 @@
 import json
 import logging
 from configparser import ConfigParser
-from pathlib import Path
 
 import requests
 
@@ -16,7 +15,8 @@ def configure_connector():
     config = ConfigParser()
     config.read("app_config.ini")
 
-    resp = requests.get(f"{config.get('hosts', 'kafka_connect')}/connectors/{config.get('kafka-connect', 'connector_name')}")
+    connect_url = f"{config.get('hosts', 'kafka_connect')}/connectors/{config.get('kafka-connect', 'connector_name')}"
+    resp = requests.get(connect_url)
     if resp.status_code == 200:
         logging.debug("connector already created, skipping recreation")
         return
@@ -46,7 +46,7 @@ def configure_connector():
         }),
     )
 
-    ## Ensure a healthy response was given
+    # Ensure a healthy response was given
     resp.raise_for_status()
     logging.debug("connector created successfully")
 

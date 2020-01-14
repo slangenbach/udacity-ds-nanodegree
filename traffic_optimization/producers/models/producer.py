@@ -2,7 +2,6 @@
 import logging
 import time
 
-from confluent_kafka import avro
 from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.avro import AvroProducer
 
@@ -64,7 +63,6 @@ class Producer:
         else:
             logger.info(f"Topic {self.topic_name} already exists")
 
-
     def close(self):
         """Prepares the producer for exit by cleaning up the producer"""
         logger.debug("producer close function working")
@@ -73,6 +71,7 @@ class Producer:
             logger.debug("Flushing producer")
             self.producer.flush()
 
-    def time_millis(self):
+    @staticmethod
+    def time_millis():
         """Use this function to get the key for Kafka Events"""
         return int(round(time.time() * 1000))
