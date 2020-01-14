@@ -31,17 +31,18 @@ class KafkaConsumer:
         self.consume_timeout = consume_timeout
         self.offset_earliest = offset_earliest
         self.broker_properties = {
-            'bootstrap.servers': 'PLAINTEXT://kafka0:9092,PLAINTEXT://kafka1:9093,PLAINTEXT://kafka2:9094',
+            'bootstrap.servers': 'PLAINTEXT://0.0.0.0:9092,PLAINTEXT://0.0.0.0:9093,PLAINTEXT://0.0.0.0:9094',
             'schema.registry.url': 'http://0.0.0.0:8081',
-            'group.id': 0
+            'group.id': 'some_id',
         }
 
         if is_avro is True:
             self.consumer = AvroConsumer(config=self.broker_properties)
         else:
-            self.consumer = Consumer(config=self.broker_properties)
+            self.consumer = Consumer({'bootstrap.servers': self.broker_properties.get('bootstrap.servers'),
+                                      'group.id': self.broker_properties.get('group.id')})
 
-        self.consumer.subscribe(f'^{topic_name_pattern}*', on_assign=self.on_assign)
+        self.consumer.subscribe([topic_name_pattern], on_assign=self.on_assign)
 
     def on_assign(self, consumer, partitions):
         """Callback for when topic assignment takes place"""
