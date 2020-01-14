@@ -47,7 +47,7 @@ class Producer:
     def create_topic(self):
         """Creates the producer topic if it does not already exist"""
 
-        logger.debug("Kafka topic creation complete")
+        logger.debug("producer topic creation function working")
         client = AdminClient({'bootstrap.servers': self.broker_properties.get('bootstrap.servers')})
 
         if self.topic_name not in client.list_topics().topics:
@@ -67,9 +67,7 @@ class Producer:
 
     def close(self):
         """Prepares the producer for exit by cleaning up the producer"""
-        logger.debug("Kafka producer close complete")
-        #client = AdminClient({'bootstrap.servers': self.broker_properties.get('bootstrap.servers')})
-        #client.delete_topics([self.topic_name])
+        logger.debug("producer close function working")
 
         if self.producer is not None:
             logger.debug("Flushing producer")
