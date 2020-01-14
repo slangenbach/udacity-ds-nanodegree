@@ -37,15 +37,14 @@ class TransformedStation(faust.Record):
 
 
 app = faust.App("stations-stream", broker="kafka://0.0.0.0:9092", store="memory://")
-topic = app.topic("^com.udacity.projects.transport.arrivals.*", value_type=Station)
-out_topic = app.topic("com.udacity.projects.transport.arrivals.transformed", partitions=1)
+topic = app.topic("com.udacity.projects.transport.stations", value_type=Station)
+out_topic = app.topic("com.udacity.projects.transport.stations.transformed", value_type=TransformedStation, partitions=1)
 
 table = app.Table(
     "stations",
-    default=str,
+    default=int,
     partitions=1,
-    changelog_topic=out_topic,
-)
+    changelog_topic=out_topic)
 
 
 @app.agent(topic)
@@ -62,8 +61,6 @@ async def transform_station(stream):
             table["line"] = "blue"
         elif event.green:
             table["line"] = "green"
-        else:
-            table["line"] = None
 
 
 if __name__ == "__main__":
