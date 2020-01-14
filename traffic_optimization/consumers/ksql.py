@@ -18,14 +18,14 @@ CREATE TABLE turnstile (
     station_name VARCHAR,
     line VARCHAR
 ) WITH (
-    KAFKA_TOPIC = 'com.udacity.projects.transport.turnstiles',
-    VALUE_FROMAT = 'AVRO',
+    KAFKA_TOPIC = 'org.chicago.cta.turnstiles',
+    VALUE_FORMAT = 'AVRO',
     KEY = 'station_id'
 );
 
 CREATE TABLE turnstile_summary
 WITH (VALUE_FORMAT = 'JSON') AS
-    SELECT station_id, COUNT(station_id) AS count
+    SELECT COUNT(station_id) AS count
     FROM turnstile
     GROUP BY station_id;
 """
@@ -34,6 +34,7 @@ WITH (VALUE_FORMAT = 'JSON') AS
 def execute_statement():
     """Executes the KSQL statement against the KSQL API"""
     if topic_check.topic_exists("TURNSTILE_SUMMARY") is True:
+        logging.info("KSQL tables already exist")
         return
 
     logging.debug("executing ksql statement...")
