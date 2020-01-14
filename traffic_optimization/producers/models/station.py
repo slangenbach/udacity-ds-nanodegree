@@ -27,7 +27,7 @@ class Station(Producer):
         )
 
         super().__init__(
-            topic_name=f"com.udacity.projects.transport.arrivals.{station_name}",
+            topic_name=f"org.chicago.cta.arrivals.{station_name}",
             key_schema=Station.key_schema,
             value_schema=Station.value_schema
         )
@@ -50,7 +50,7 @@ class Station(Producer):
             value={
                 "station_id": self.station_id,
                 "train_id": train.train_id,
-                "line": self.station.color.name,
+                "line": self.color.name,
                 "direction": direction,
                 "train_status": train.status.name,
                 "prev_station_id": prev_station_id,
