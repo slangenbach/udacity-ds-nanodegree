@@ -8,8 +8,6 @@ import faust
 
 
 logger = logging.getLogger(__name__)
-#config = ConfigParser()
-#config.read(Path(__file__).parent.parent.joinpath("app_config.ini"))
 
 
 # Faust will ingest records from Kafka in this format
@@ -37,8 +35,8 @@ class TransformedStation(faust.Record):
 
 
 app = faust.App("stations-stream", broker="kafka://0.0.0.0:9092", store="memory://")
-topic = app.topic("com.udacity.projects.transport.stations", value_type=Station)
-out_topic = app.topic("com.udacity.projects.transport.stations.transformed", value_type=TransformedStation, partitions=1)
+topic = app.topic("org.cta.chicago.stations", value_type=Station)
+out_topic = app.topic("org.chicago.cta.stations.table.v1", value_type=TransformedStation, partitions=1)
 
 table = app.Table(
     "stations",
