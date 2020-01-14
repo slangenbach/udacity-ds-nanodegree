@@ -43,13 +43,14 @@ class Station(Producer):
     def run(self, train, direction, prev_station_id, prev_direction):
         """Simulates train arrivals at this station"""
 
-        logger.debug("Kafka arrival complete")
+        logger.debug("Station run function working")
         self.producer.produce(
             topic=self.topic_name,
             key={"timestamp": self.time_millis()},
             value={
                 "station_id": self.station_id,
                 "train_id": train.train_id,
+                "line": self.station.color.name,
                 "direction": direction,
                 "train_status": train.status.name,
                 "prev_station_id": prev_station_id,
