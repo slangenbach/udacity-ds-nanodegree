@@ -1,8 +1,6 @@
 """Configures KSQL to combine station and turnstile data"""
 import json
 import logging
-from configparser import ConfigParser
-from pathlib import Path
 
 import requests
 
@@ -20,7 +18,7 @@ CREATE TABLE turnstile (
     station_name VARCHAR,
     line VARCHAR
 ) WITH (
-    KAFKA_TOPIC = '^com.udacity.projects.transport.turnstiles.*',
+    KAFKA_TOPIC = 'com.udacity.projects.transport.turnstiles',
     VALUE_FROMAT = 'AVRO',
     KEY = 'station_id'
 );
