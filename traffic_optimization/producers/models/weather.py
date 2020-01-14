@@ -29,7 +29,7 @@ class Weather(Producer):
 
     def __init__(self, month):
         super().__init__(
-            topic_name="com.udacity.projects.transport.weather",
+            topic_name="org.chicago.cta.weather.v1",
             key_schema=Weather.key_schema,
             value_schema=Weather.value_schema,
         )
@@ -62,7 +62,7 @@ class Weather(Producer):
 
     def run(self, month):
 
-        logger.debug("Kafka weather proxy integration complete")
+        logger.debug("weather run function working")
         self._set_weather(month)
 
         resp = requests.post(
@@ -72,14 +72,14 @@ class Weather(Producer):
                 {
                     "key_schema": Weather.key_schema,
                     "value_schema": Weather.value_schema,
-                    "records": [{"temperature": self.temp, "status": self.status.name}]
+                    "records": [{"key": {"timestamp": self.time_millis()}, "value": {"temperature": self.temp, "status": self.status.name}}]
                 }
             ),
         )
         try:
             resp.raise_for_status()
         except:
-            print(f"Failed to send data to REST Proxy: {json.dumps(resp.json(), indent=2)}")
+            logging.critical(f"Failed to send data to REST Proxy: {json.dumps(resp.json(), indent=2)}")
 
         logger.debug(
             "sent weather data to kafka, temp: %s, status: %s",
