@@ -27,7 +27,7 @@ class Turnstile(Producer):
         )
 
         super().__init__(
-            topic_name="com.udacity.projects.transport.turnstiles",
+            topic_name="org.chicago.cta.turnstiles",
             key_schema=Turnstile.key_schema,
             value_schema=Turnstile.value_schema)
 
