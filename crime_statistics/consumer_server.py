@@ -5,23 +5,10 @@ from configparser import ConfigParser
 from confluent_kafka import Consumer
 
 
-def run_kafka_consumer(config: ConfigParser) -> Consumer:
+def run_kafka_consumer():
     """
     tbd
     """
-    consumer = Consumer({
-        "bootstrap.servers": config.get("kafka", "bootstrap_servers"),
-        "group.id": config.get("kafka", "group_id"),
-        "auto.offset.reset": config.get("kafka", "auto_offset_reset")
-    })
-
-    # subscribe to topic
-    consumer.subscribe(topics=[config.get("kafka", "topic")])
-
-    return consumer
-
-
-if __name__ == "__main__":
 
     # load config
     config = ConfigParser()
@@ -31,9 +18,16 @@ if __name__ == "__main__":
     logging.config.fileConfig("logging.ini")
     logger = logging.getLogger(__name__)
 
-    # start kafka consumer and subscribe to topic
+    # start kafka consumer
     logger.info("Starting Kafka Consumer")
-    consumer = run_kafka_consumer(config)
+    consumer = Consumer({
+        "bootstrap.servers": config.get("kafka", "bootstrap_servers"),
+        "group.id": config.get("kafka", "group_id"),
+        "auto.offset.reset": config.get("kafka", "auto_offset_reset")
+    })
+
+    # subscribe to topic
+    consumer.subscribe(topics=[config.get("kafka", "topic")])
 
     # consume messages
     try:
@@ -52,3 +46,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logging.info("Stopping Kafka consumer")
         consumer.close()
+
+
+if __name__ == "__main__":
+    run_kafka_consumer()
