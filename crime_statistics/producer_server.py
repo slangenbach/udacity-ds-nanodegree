@@ -47,16 +47,21 @@ class ProducerServer():
         tbd
         """
         with open(self.input_file, "r") as f:
+
+            # read JSON data from input file
             lines = json.loads(f.read())
+            logger.debug(f"Read {len(lines)} lines from input file: {self.input_file}")
+
             for ix, line in enumerate(lines):
 
                 # trigger delivery report callbacks from previous produce calls
                 self.producer.poll(timeout=1)
 
-                logger.debug("Encoding line to JSON")
+                # encode Python dict as string
                 msg = json.dumps(line)
+                logger.debug(f"Encoding line as JSON: {msg}")
 
-                logger.debug(f"Sending encoded data to Kafka: {msg}")
+                logger.debug(f"Sending encoded data to Kafka: {ix}")
                 self.producer.produce(topic=self.topic, value=msg.encode("utf-8"), callback=self.delivery_callback)
 
                 # wait 1 second before reading next line
@@ -66,14 +71,14 @@ class ProducerServer():
             logger.debug("Flushing producer")
             self.producer.flush()
 
-    def delivery_callback(self, msg, err):
+    def delivery_callback(self, err, msg):
         """
         tbd
         """
         if err is not None:
             logger.error(f"Failed to deliver message: {err}")
         else:
-            logger.info(f"Successfully produced message: {msg}")
+            logger.info(f"Successfully produced message to topic {msg.topic()}")
 
     def close(self):
         logger.debug("Flushing producer")
