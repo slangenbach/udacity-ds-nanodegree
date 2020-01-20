@@ -2,42 +2,37 @@ import logging
 import logging.config
 from configparser import ConfigParser
 
+# make sure logging config is picked up by modules
+logging.config.fileConfig("logging.ini")
+
 import producer_server
 
 
-def run_kafka_server(config: ConfigParser) -> producer_server:
-    """
-    tbd
-    """
-    producer = producer_server.ProducerServer(
-        input_file=config.get("kafka", "input_file"),
-        topic=config.get("kafka", "topic"),
-        conf = {
-            "bootstrap.servers": config.get("bootstrap_servers"),
-            "client.id": config.get("client_id")
-        }
-    )
-
-    return producer
-
-
-if __name__ == "__main__":
+def run_kafka_producer():
 
     # load config
     config = ConfigParser()
     config.read("app.ini")
 
     # start logging
-    logging.config.fileConfig("logging.ini")
     logger = logging.getLogger(__name__)
-    logger.info("Starting")
 
     # start kafka server and generate data
     logger.info("Starting Kafka Producer")
-    producer = run_kafka_server(config)
+    producer = producer_server.ProducerServer(config)
 
     # check if topic exists
+    logger.info("Creating topic...")
     producer.create_topic()
 
-    logger.info("Start generating data...")
-    producer.generate_data()
+    # generate data
+    logger.info("Starting to generate data...")
+    try:
+        producer.generate_data()
+    except KeyboardInterrupt:
+        logging.info("Stopping Kafka Producer")
+        producer.close()
+
+
+if __name__ == "__main__":
+    run_kafka_producer()
