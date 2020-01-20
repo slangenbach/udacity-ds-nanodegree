@@ -1,6 +1,5 @@
 import logging
 import logging.config
-import json
 from configparser import ConfigParser
 
 from confluent_kafka import Consumer
@@ -31,23 +30,25 @@ if __name__ == "__main__":
     # start logging
     logging.config.fileConfig("logging.ini")
     logger = logging.getLogger(__name__)
-    logger.info("Starting")
 
     # start kafka consumer and subscribe to topic
     logger.info("Starting Kafka Consumer")
     consumer = run_kafka_consumer(config)
 
     # consume messages
-    while True:
-        msg = consumer.poll(timeout=.0)
+    try:
+        while True:
+            msg = consumer.poll(timeout=1.0)
 
-        if msg is None:
-            logging.debug("No message received")
-            continue
-        elif msg.error():
-            logging.error(f"Consumer error: {msg.error()}")
-            continue
-        else:
-            logging.info(f"Received message: {msg.value().decode('utf-8')}")
+            if msg is None:
+                logging.debug("No message received")
+                continue
+            if msg.error():
+                logging.error(f"Consumer error: {msg.error()}")
+                continue
+            else:
+                logging.info(f"Received message: {msg.value().decode('utf-8')}")
 
-    consumer.close()
+    except KeyboardInterrupt:
+        logging.info("Stopping Kafka consumer")
+        consumer.close()
