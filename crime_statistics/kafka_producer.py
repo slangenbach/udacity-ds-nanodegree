@@ -9,15 +9,15 @@ import producer_server
 
 
 def run_kafka_producer():
+    """
+    tbd
+    """
 
     # load config
     config = ConfigParser()
     config.read("app.ini")
 
-    # start logging
-    logger = logging.getLogger(__name__)
-
-    # start kafka server and generate data
+    # start kafka producer
     logger.info("Starting Kafka Producer")
     producer = producer_server.ProducerServer(config)
 
@@ -27,6 +27,7 @@ def run_kafka_producer():
 
     # generate data
     logger.info("Starting to generate data...")
+
     try:
         producer.generate_data()
     except KeyboardInterrupt:
@@ -35,4 +36,8 @@ def run_kafka_producer():
 
 
 if __name__ == "__main__":
+
+    # start logging
+    logger = logging.getLogger(__name__)
+
     run_kafka_producer()
