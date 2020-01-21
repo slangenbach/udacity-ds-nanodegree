@@ -14,10 +14,6 @@ def run_kafka_consumer():
     config = ConfigParser()
     config.read("app.ini")
 
-    # start logging
-    logging.config.fileConfig("logging.ini")
-    logger = logging.getLogger(__name__)
-
     # start kafka consumer
     logger.info("Starting Kafka Consumer")
     consumer = Consumer({
@@ -32,7 +28,7 @@ def run_kafka_consumer():
     # consume messages
     try:
         while True:
-            msg = consumer.poll(timeout=1.0)
+            msg = consumer.poll(timeout=3.0)
 
             if msg is None:
                 logging.debug("No message received")
@@ -49,4 +45,9 @@ def run_kafka_consumer():
 
 
 if __name__ == "__main__":
+
+    # start logging
+    logging.config.fileConfig("logging.ini")
+    logger = logging.getLogger(__name__)
+
     run_kafka_consumer()

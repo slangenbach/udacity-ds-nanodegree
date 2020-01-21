@@ -55,7 +55,7 @@ class ProducerServer():
             for ix, line in enumerate(lines):
 
                 # trigger delivery report callbacks from previous produce calls
-                self.producer.poll(timeout=1)
+                self.producer.poll(timeout=3)
 
                 # encode Python dict as string
                 msg = json.dumps(line)
