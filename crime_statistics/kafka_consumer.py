@@ -7,12 +7,12 @@ from confluent_kafka import Consumer
 
 def run_kafka_consumer():
     """
-    tbd
+    Create Kafka consumer, subscribe to relevant topic and start consuming messages
     """
 
     # load config
     config = ConfigParser()
-    config.read("app.ini")
+    config.read("app.cfg")
 
     # start kafka consumer
     logger.info("Starting Kafka Consumer")
@@ -28,7 +28,7 @@ def run_kafka_consumer():
     # consume messages
     try:
         while True:
-            msg = consumer.poll(timeout=3.0)
+            msg = consumer.poll(timeout=2.0)
 
             if msg is None:
                 logging.debug("No message received")

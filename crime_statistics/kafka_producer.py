@@ -10,12 +10,12 @@ import producer_server
 
 def run_kafka_producer():
     """
-    tbd
+    Create Kafka producer, check if relevant topic exists (if not create it) and start producing messages
     """
 
     # load config
     config = ConfigParser()
-    config.read("app.ini")
+    config.read("app.cfg")
 
     # start kafka producer
     logger.info("Starting Kafka Producer")
