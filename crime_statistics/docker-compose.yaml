@@ -1,5 +1,6 @@
 version: "3.7"
 
+# create Zookeeper service to manage Kafka
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:5.2.2
@@ -8,6 +9,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: "2181"
 
+# create first Kafka node
   kafka0:
     image: confluentinc/cp-kafka:5.2.2
     ports:
@@ -22,6 +24,7 @@ services:
     depends_on:
     - "zookeeper"
 
+# create second Kafka node
   kafka1:
     image: confluentinc/cp-kafka:5.2.2
     ports:
@@ -36,6 +39,7 @@ services:
     depends_on:
       - "zookeeper"
 
+# create third Kafka node
   kafka2:
     image: confluentinc/cp-kafka:5.2.2
     ports:
@@ -50,8 +54,9 @@ services:
     depends_on:
       - "zookeeper"
 
+# create standalone Spark cluster
   spark:
-    image: gettyimages/spark:latest
+    image: gettyimages/spark:2.4.1-hadoop-3.0
     ports:
       - "8080:8080"
       - "18080:18080"
