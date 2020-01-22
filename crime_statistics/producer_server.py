@@ -9,9 +9,9 @@ from confluent_kafka.admin import AdminClient, NewTopic
 logger = logging.getLogger(__name__)
 
 
-class ProducerServer():
+class ProducerServer:
     """
-    tbd
+    Basic Kafka consumer class
     """
 
     def __init__(self, conf):
@@ -21,12 +21,13 @@ class ProducerServer():
         self.bootstrap_servers = self.conf.get("kafka", "bootstrap_servers")
         self.num_partitions = self.conf.getint("kafka", "num_partitions")
         self.replication_factor = self.conf.getint("kafka", "replication_factor")
+        self.progress_interval = self.conf.getint("kafka", "progress_interval")
         self.admin_client = AdminClient({"bootstrap.servers": self.bootstrap_servers})
         self.producer = Producer({"bootstrap.servers": self.bootstrap_servers})
 
     def create_topic(self):
         """
-        tbd
+        Check if Kafka topic already exists. If not, create it, else continue
         """
         if self.topic not in self.admin_client.list_topics().topics:
             futures = self.admin_client.create_topics([NewTopic(topic=self.topic,
@@ -44,36 +45,46 @@ class ProducerServer():
 
     def generate_data(self):
         """
-        tbd
+        Read input JSON file from disk and produce individual serialized rows to Kafka
         """
         with open(self.input_file, "r") as f:
 
             # read JSON data from input file
-            lines = json.loads(f.read())
-            logger.debug(f"Read {len(lines)} lines from input file: {self.input_file}")
+            data = json.loads(f.read())
+            logger.debug(f"Read {len(data)} lines from input file: {self.input_file}")
 
-            for ix, line in enumerate(lines):
+            for idx, row in enumerate(data):
 
                 # trigger delivery report callbacks from previous produce calls
-                self.producer.poll(timeout=3)
+                self.producer.poll(timeout=2)
 
-                # encode Python dict as string
-                msg = json.dumps(line)
-                logger.debug(f"Encoding line as JSON: {msg}")
+                # serialize Python dict to string
+                msg = self.serialize_json(row)
+                logger.debug(f"Serialized JSON data: {msg}")
 
-                logger.debug(f"Sending encoded data to Kafka: {ix}")
-                self.producer.produce(topic=self.topic, value=msg.encode("utf-8"), callback=self.delivery_callback)
+                # send data to Kafka
+                self.producer.produce(topic=self.topic, value=msg, callback=self.delivery_callback)
 
-                # wait 1 second before reading next line
-                time.sleep(1)
+                # log progress
+                if idx % self.progress_interval == 0:
+                    logger.debug(f"Processed {idx} rows of data")
+
+                # wait 2 second before reading next line
+                time.sleep(2)
 
             # make sure all messages are delivered before closing producer
             logger.debug("Flushing producer")
             self.producer.flush()
 
+    def serialize_json(self, json_data):
+        """
+        Serialize Python dict to JSON-formatted, UTF-8 encoded string
+        """
+        return json.dumps(json_data).encode("utf-8")
+
     def delivery_callback(self, err, msg):
         """
-        tbd
+        Callback triggered by produce function
         """
         if err is not None:
             logger.error(f"Failed to deliver message: {err}")
@@ -81,5 +92,8 @@ class ProducerServer():
             logger.info(f"Successfully produced message to topic {msg.topic()}")
 
     def close(self):
+        """
+        Convenience method to flush producer
+        """
         logger.debug("Flushing producer")
         self.producer.flush()
