@@ -17,8 +17,11 @@ https://asciinema.org.
 ### Consumer
 [![asciicast](https://asciinema.org/a/iRIs7eSSkHHwhPw1BUrzQM1Y3.svg)](https://asciinema.org/a/iRIs7eSSkHHwhPw1BUrzQM1Y3)
 
-### Spark Streaming
+### Spark Streaming aggregation
 [![asciicast](https://asciinema.org/a/uwJHvosvWbJsEsoR1Mr1LqE4y.svg)](https://asciinema.org/a/uwJHvosvWbJsEsoR1Mr1LqE4y)
+
+### Spark Streaming join
+[![asciicast](https://asciinema.org/a/bYL5DFydws0KbkFNe4LXc6QLV.svg)](https://asciinema.org/a/bYL5DFydws0KbkFNe4LXc6QLV)
 
 ## Prerequisites
 * Access to raw SF crime statistics data in JSON format
