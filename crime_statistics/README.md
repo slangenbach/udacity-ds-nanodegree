@@ -42,7 +42,7 @@ the JARs `curl -O <path_to_jar>`.
 4. Double check if Java 8 is installed on your machine with `java -version`, and if 
 `JAVA_HOME` is set correctly via `echo $JAVA_HOME`. You can get prebuilt Java 8 binaries from 
 [AdoptOpenJDK](https://adoptopenjdk.net/) and set `JAVA_HOME` using 
-`export JAVA_HOME=<path_to_java>` (default path on macOS)
+`export JAVA_HOME=<path_to_java>`. If you do not want to set JAVA_HOME permanently, set it in `submit_spark_job.sh`
 5. Create a dedicated Python environment using conda via `conda env create -f conda_env.yml` 
 and activate it via `conda activate udacity-dsnd`
 6. Optionally edit `app.cfg` in order to change configuration settings for Kafka and Spark. If you want to run Spark 
