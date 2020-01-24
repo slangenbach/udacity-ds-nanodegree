@@ -58,7 +58,7 @@ jobs locally set `master=local[*]`
 ([gettyimages/spark](https://hub.docker.com/r/gettyimages/spark/)) since the Spark maintainers do not provide an 
 official image. Unfortunately the latest release of that image does not use the latest version of Spark, but version 
 2.4.1.
-* External JARs (see step in usage) have to be downloaded manually to Spark master and worker hosts
+* External JARs (see step 3 in usage section) have to be downloaded manually to Spark master and worker hosts
 
 # Resources
 * [Spark Structured Streaming Programming Guide](https://spark.apache.org/docs/2.4.1/structured-streaming-programming-guide.html)
