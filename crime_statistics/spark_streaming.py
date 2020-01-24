@@ -63,8 +63,8 @@ def run_spark_job(spark: SparkSession, config: ConfigParser):
 
     # select original_crime_type_name, disposition and call_date_time (required for watermark)
     distinct_table = service_table \
-            .select("original_crime_type_name", "disposition", "call_date_time") \
-            .withWatermark("call_date_time", "10 minutes")
+        .select("original_crime_type_name", "disposition", "call_date_time") \
+        .withWatermark("call_date_time", "10 minutes")
 
     # load radio code data
     logger.debug("Reading static data from disk")
@@ -109,7 +109,6 @@ def run_spark_job(spark: SparkSession, config: ConfigParser):
 
 
 if __name__ == "__main__":
-
     # load config
     config = ConfigParser()
     config.read("app.cfg")
