@@ -5,7 +5,6 @@ import time
 from confluent_kafka import Producer, KafkaError
 from confluent_kafka.admin import AdminClient, NewTopic
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -31,8 +30,8 @@ class ProducerServer:
         """
         if self.topic not in self.admin_client.list_topics().topics:
             futures = self.admin_client.create_topics([NewTopic(topic=self.topic,
-                                                     num_partitions=self.num_partitions,
-                                                     replication_factor=self.replication_factor)])
+                                                                num_partitions=self.num_partitions,
+                                                                replication_factor=self.replication_factor)])
 
             for _topic, future in futures.items():
                 try:
@@ -76,13 +75,15 @@ class ProducerServer:
             logger.debug("Flushing producer")
             self.producer.flush()
 
-    def serialize_json(self, json_data):
+    @staticmethod
+    def serialize_json(json_data):
         """
         Serialize Python dict to JSON-formatted, UTF-8 encoded string
         """
         return json.dumps(json_data).encode("utf-8")
 
-    def delivery_callback(self, err, msg):
+    @staticmethod
+    def delivery_callback(err, msg):
         """
         Callback triggered by produce function
         """
