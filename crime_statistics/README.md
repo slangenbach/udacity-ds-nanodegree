@@ -42,7 +42,7 @@ the JARs `curl -O <path_to_jar>`.
 4. Double check if Java 8 is installed on your machine with `java -version`, and if 
 `JAVA_HOME` is set correctly via `echo $JAVA_HOME`. You can get prebuilt Java 8 binaries from 
 [AdoptOpenJDK](https://adoptopenjdk.net/) and set `JAVA_HOME` using 
-`export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/` (default path on macOS)
+`export JAVA_HOME=<path_to_java>` (default path on macOS)
 5. Create a dedicated Python environment using conda via `conda env create -f conda_env.yml` 
 and activate it via `conda activate udacity-dsnd`
 6. Optionally edit `app.cfg` in order to change configuration settings for Kafka and Spark. If you want to run Spark 
@@ -58,7 +58,7 @@ jobs locally set `master=local[*]`
 ([gettyimages/spark](https://hub.docker.com/r/gettyimages/spark/)) since the Spark maintainers do not provide an 
 official image. Unfortunately the latest release of that image does not use the latest version of Spark, but version 
 2.4.1.
-* External JARs (see step 3 in usage section) have to be downloaded manually to Spark master and worker hosts
+* External JARs (see step 3 in usage section) have to be downloaded manually to Spark master and worker hosts for now.
 
 # Resources
 * [Spark Structured Streaming Programming Guide](https://spark.apache.org/docs/2.4.1/structured-streaming-programming-guide.html)
